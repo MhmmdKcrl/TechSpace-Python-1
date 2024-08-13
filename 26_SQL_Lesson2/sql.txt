@@ -1,0 +1,127 @@
+id BIGINT unsigned auto_increment NOT NULL,
+
+CREATE DATABASE ECOMMERCE;
+CREATE TABLE Product(
+    id INT unsigned PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    price SMALLINT(4) NOT NULL,
+    description text NOT NULL
+);
+
+CREATE TABLE ProductImage(
+    id INT unsigned PRIMARY KEY,
+    product_id INT NOT NULL,
+    image TEXT NOT NULL
+);
+
+CREATE TABLE Users(
+    id INT unsigned PRIMARY KEY,
+    email VARCHAR(30) NOT NULL,
+    password TEXT NOT NULL
+);
+
+
+
+CREATE TABLE UserProfile(
+    id INT unsigned PRIMARY KEY,
+    user_id INT,
+    profile_image TEXT,
+    name VARCHAR(30) NOT NULL,
+    surname VARCHAR(30) NOT NULL,
+    address TEXT NOT NULL
+);
+CREATE TABLE Orders(
+    id INT unsigned PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity SMALLINT(2)
+);
+CREATE TABLE UserOrders(
+    id INT unsigned PRIMARY KEY,
+    order_id INT NOT NULL,
+    user_id INT NOT NULL
+);
+
+
+
+SELECT u.id AS 'USER ID', p.name, p.surname, u.email, p.profile_image, p.address
+FROM Users as u INNER JOIN UserProfile as p ON u.id = p.user_id;
+SELECT u.id AS 'USER ID', p.name, p.surname, u.email, p.profile_image, p.address
+FROM Users as u LEFT JOIN UserProfile as p ON u.id = p.user_id;
+SELECT u.id AS 'USER ID', p.name, p.surname, u.email, p.profile_image, p.address
+FROM Users as u RIGHT JOIN UserProfile as p ON u.id = p.user_id;
+
+
+------- Records --------
+insert into Users (email, password)
+values
+("user1@gmail.com", "1234678"),
+("user2@gmail.com", "4567"),
+("user3@gmail.com", "lsda0988"),
+("user4@gmail.com", "password");
+insert into Product (name, price, description)
+values
+("iphone 14", 12, "text"),
+("airpods", 13, "text"),
+("macbook", 15, "text"),
+("apple tv", 16, "text");
+insert into Orders (product_id, quantity)
+values
+(1, 4),
+(2, 1),
+(1, 1),
+(3, 8);
+insert into UserProfile (user_id, profile_image, name, surname, address)
+values
+(1, "some path", "user1 ", "surname 1", "some address"),
+(2, "some path", "user2 ", "surname 2", "some address"),
+(3, "some path", "user3 ", "surname 3", "some address"),
+(4, "some path", "user4 ", "surname 4", "some address");
+Insert into UserOrders (user_id, order_id)
+values
+(1, 1),
+(1, 2),
+(3, 2),
+(2, 3),
+(4, 3),
+(4, 4);
+
+
+CREATE TABLE Product(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    price SMALLINT(4) NOT NULL,
+    description text NOT NULL
+);
+CREATE TABLE ProductImage(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    image TEXT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES Product (id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS Users(
+    id INT PRIMARY KEY,
+    email VARCHAR(30) NOT NULL,
+    password TEXT NOT NULL
+);
+CREATE TABLE UserProfile(
+    id INT PRIMARY KEY,
+    user_id INT NOT NULL,
+    profile_image TEXT,
+    name VARCHAR(30) NOT NULL,
+    surname VARCHAR(30) NOT NULL,
+    address TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+CREATE TABLE Orders(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity SMALLINT(2),
+    FOREIGN KEY (product_id) REFERENCES Product(id)
+);
+CREATE TABLE UserOrders(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
